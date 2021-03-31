@@ -85,6 +85,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
       }
       if(isValid) list.add(Classroom(name, value, type, capacity));
     }
+    list.sort((a,b){return a.name.compareTo(b.name);});
     return list;
   }
 
@@ -128,7 +129,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
                     child: Container(
                         margin: EdgeInsets.all(100),
                         child: CircularProgressIndicator())),
-                Center(child: Text('由于教务系统查询频率限制，查询可能会比较慢'),)
+                Center(child: Text('由于教务系统查询频率限制，查询可能会比较慢\n并且有概率会加载失败'),)
               ],
             ));
           }
