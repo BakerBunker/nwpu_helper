@@ -4,10 +4,10 @@ import 'package:nwpu_helper/constant/constants.dart';
 import 'package:nwpu_helper/utils/global.dart';
 
 class Classroom {
-  String name;
-  String value;
-  String type;
-  String capacity;
+  final String name;
+  final String type;
+  final String value;
+  final String capacity;
 
   Classroom(this.name, this.value, this.type, this.capacity);
 
@@ -41,6 +41,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
   late final Future<List<Classroom>> _futureRooms;
 
   Future<List<Classroom>> getAvailableRooms() async {
+    final nameMap = Map<String, Classroom>();
     final list = List<Classroom>.empty(growable: true);
     final regex = RegExp(r'\d+');
     final result = await dio.get(
@@ -52,41 +53,52 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
           "room.type.id": widget.roomType,
           "iWeek": widget.week,
           "pageNo": 1,
-          "pageSize": 100
+          "pageSize": 300
         });
     final document = parse(result.data.toString());
-    final children=document.querySelector('.gridtable')!.children[1].children;
-    for(var line in children){
+    final children = document.querySelector('.gridtable')!.children[1].children;
+    final valueList = List<String>.empty(growable: true);
+    for (var line in children) {
       final children = line.children;
       final href = children[1].children[0].attributes['href'].toString();
-      bool isValid=true;
 
       final name = children[1].text.trim();
       final value = regex.stringMatch(href) ?? '';
       final type = children[4].text;
       final capacity = children[5].text;
 
-      await Future.delayed(Duration(milliseconds: 150));
-      final roomResult=await dio.get('http://us.nwpu.edu.cn/eams/stdRooms!info.action',queryParameters: {
-        'roomIds':value,
-        'mode':'simple',
-        'semesterId':constant.semesterId,
-        'iWeek':widget.week
-      });
-      final roomDocument=parse(roomResult.data.toString());
-      final body=roomDocument.querySelector('.gridtable')!.children[0];
-      for(int i=(widget.classRange.start+1).toInt();i<(widget.classRange.end+1).toInt();i++){
+      nameMap[name] = Classroom(name, value, type, capacity);
+      valueList.add(value);
+    }
+    final roomResult = await dio.get(
+        'http://us.nwpu.edu.cn/eams/stdRooms!info.action',
+        queryParameters: {
+          'roomIds': valueList,
+          'mode': 'simple',
+          'semesterId': constant.semesterId,
+          'iWeek': widget.week
+        });
+    final roomDocument = parse(roomResult.data.toString());
+    final tables = roomDocument.querySelectorAll('.gridtable');
+    for (var table in tables) {
+      final body = table.children[0];
+
+      final name = body.children[0].text.trim().split(' ')[0];
+
+      for (int i = (widget.classRange.start + 1).toInt();
+          i < (widget.classRange.end + 1).toInt();
+          i++) {
         print(i);
-        if(body.children[i].children[widget.date].text.contains('排课') || body.children[i].children[widget.date].text.contains('占用')){
-          isValid=false;
+        if (body.children[i].children[widget.date].text.contains('排课') ||
+            body.children[i].children[widget.date].text.contains('占用')) {
           print('break');
           break;
+        } else {
+          list.add(nameMap[name]!);
         }
       }
-      if(isValid) list.add(Classroom(name, value, type, capacity));
     }
-    list.sort((a,b){return a.name.compareTo(b.name);});
-    return list;
+    return list..sort((a,b)=>a.name.compareTo(b.name));
   }
 
   @override
@@ -111,7 +123,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
             print(snapshot.error.toString());
           } else if (snapshot.hasData) {
             final list = snapshot.data ?? [];
-            if(list.isEmpty) return Center(child: Text('无可用教室'));
+            if (list.isEmpty) return Center(child: Text('无可用教室'));
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 final classroom = list[index];
@@ -129,7 +141,9 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
                     child: Container(
                         margin: EdgeInsets.all(100),
                         child: CircularProgressIndicator())),
-                Center(child: Text('由于教务系统查询频率限制，查询可能会比较慢\n并且有概率会加载失败'),)
+                Center(
+                  child: Text('由于教务系统查询频率限制，查询可能会比较慢\n并且有概率会加载失败'),
+                )
               ],
             ));
           }
