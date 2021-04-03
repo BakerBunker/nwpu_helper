@@ -75,7 +75,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
       });
       final roomDocument=parse(roomResult.data.toString());
       final body=roomDocument.querySelector('.gridtable')!.children[0];
-      for(int i=(widget.classRange.start+1).toInt();i<=(widget.classRange.end+1).toInt();i++){
+      for(int i=(widget.classRange.start+1).toInt();i<(widget.classRange.end+1).toInt();i++){
         print(i);
         if(body.children[i].children[widget.date].text.contains('排课') || body.children[i].children[widget.date].text.contains('占用')){
           isValid=false;
