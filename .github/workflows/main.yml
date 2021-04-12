@@ -38,5 +38,6 @@ jobs:
           artifacts: 'build/app/outputs/apk/release/*.apk'
           token: ${{ secrets.GITHUB_TOKEN }}
           commit: master
+          tag: "latest"
       
       
