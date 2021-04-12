@@ -42,7 +42,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
 
   Future<List<Classroom>> getAvailableRooms() async {
     final nameMap = Map<String, Classroom>();
-    final list = List<Classroom>.empty(growable: true);
+    final list = Set<Classroom>();
     final regex = RegExp(r'\d+');
     final result = await dio.get(
         'http://us.nwpu.edu.cn/eams/stdRooms!search.action',
@@ -98,7 +98,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
         }
       }
     }
-    return list..sort((a,b)=>a.name.compareTo(b.name));
+    return list.toList()..sort((a,b)=>a.name.compareTo(b.name));
   }
 
   @override
