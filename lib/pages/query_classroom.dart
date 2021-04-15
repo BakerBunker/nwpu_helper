@@ -182,7 +182,8 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
       '16:55',
       '19:00',
       '19:55',
-      '20:40'
+      '20:40',
+      '21:25'
     ];
 
     return ListTile(
@@ -195,8 +196,8 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
             setState(() => selectedClassRange = newValue);
           },
           min: 1,
-          max: 13,
-          divisions: 12,
+          max: 14,
+          divisions: 13,
           labels: RangeLabels('${map[selectedClassRange.start.toInt()-1]}',
               '${map[selectedClassRange.end.toInt()-1]}'),
         ),
