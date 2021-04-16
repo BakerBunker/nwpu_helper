@@ -91,10 +91,8 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
       for (int i = (widget.classRange.start + 1).toInt();
           i < (widget.classRange.end + 1).toInt();
           i++) {
-        print(i);
         if (body.children[i].children[widget.date].text.contains('排课') ||
             body.children[i].children[widget.date].text.contains('占用')) {
-          print('break');
           break;
         } else {
           list.add(nameMap[name]!);
