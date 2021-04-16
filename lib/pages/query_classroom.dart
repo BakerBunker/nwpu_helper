@@ -15,8 +15,10 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
 
   late final Future<List<Map<String, String>>> _future;
 
+  //states
   var menuValues = <String>['', '', '', '1', '1'];
   var selectedClassRange = RangeValues(1, 13);
+  final keywordController = TextEditingController();
 
   Future<List<Map<String, String>>> getParams() async {
     final response =
@@ -108,6 +110,7 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
               children: [
                 ...children,
                 _buildSlider(context),
+                _buildKeywordInputField(keywordController),
                 Container(
                   height: MediaQuery.of(context).size.height / 6,
                 ),
@@ -136,12 +139,14 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
               prefs.setString(Constants.DATE_VALUE, menuValues[4]);
               Navigator.push(context, MaterialPageRoute(builder: (_) {
                 return ClassroomResultPage(
-                    campus: menuValues[0],
-                    building: menuValues[1],
-                    roomType: menuValues[2],
-                    week: menuValues[3],
-                    date: int.parse(menuValues[4]),
-                    classRange: selectedClassRange);
+                  campus: menuValues[0],
+                  building: menuValues[1],
+                  roomType: menuValues[2],
+                  week: menuValues[3],
+                  date: int.parse(menuValues[4]),
+                  classRange: selectedClassRange,
+                  keyword: keywordController.text,
+                );
               }));
             },
             child: SizedBox(
@@ -169,7 +174,7 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
   }
 
   ListTile _buildSlider(BuildContext context) {
-    List<String> map=[
+    List<String> map = [
       '8:30',
       '9:25',
       '10:30',
@@ -198,8 +203,20 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
           min: 1,
           max: 14,
           divisions: 13,
-          labels: RangeLabels('${map[selectedClassRange.start.toInt()-1]}',
-              '${map[selectedClassRange.end.toInt()-1]}'),
+          labels: RangeLabels('${map[selectedClassRange.start.toInt() - 1]}',
+              '${map[selectedClassRange.end.toInt() - 1]}'),
+        ),
+      ),
+    );
+  }
+
+  ListTile _buildKeywordInputField(TextEditingController controller) {
+    return ListTile(
+      leading: Text('搜索关键字'),
+      trailing: Container(
+        width: MediaQuery.of(context).size.width / 6 * 4,
+        child: TextField(
+          controller: controller,
         ),
       ),
     );

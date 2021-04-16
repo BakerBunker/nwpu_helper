@@ -24,6 +24,7 @@ class ClassroomResultPage extends StatefulWidget {
   final String week;
   final int date;
   final RangeValues classRange;
+  final String keyword;
 
   ClassroomResultPage(
       {required this.campus,
@@ -31,7 +32,8 @@ class ClassroomResultPage extends StatefulWidget {
       required this.roomType,
       required this.week,
       required this.date,
-      required this.classRange});
+      required this.classRange,
+      this.keyword=''});
 
   @override
   _ClassroomResultPageState createState() => _ClassroomResultPageState();
@@ -49,6 +51,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
         queryParameters: {
           "semesterId": constant.semesterId,
           "room.campus.id": widget.campus,
+          "room.name":widget.keyword,
           "room.building.id": widget.building,
           "room.type.id": widget.roomType,
           "iWeek": widget.week,
