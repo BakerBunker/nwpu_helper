@@ -30,14 +30,22 @@ jobs:
       - uses: subosito/flutter-action@v1
         with: 
           channel: 'stable'
-      - run: flutter pub get
-      - run: flutter build apk --obfuscate --split-debug-info=debugInfo --target-platform android-arm,android-arm64,android-x64 --split-per-abi
+          
+      - name: update dependencies
+        run: flutter pub get
       
-      - uses: ncipollo/release-action@v1
+      - name: build apk
+        run: flutter build apk --obfuscate --split-debug-info=debugInfo --target-platform android-arm,android-arm64,android-x64 --split-per-abi
+      
+      - name: set env
+        run: echo "::set-env name=NOW::v$(date +'%Y%m%d.%H%M%S')"
+        
+      - name: create release
+        uses: ncipollo/release-action@v1
         with: 
           artifacts: 'build/app/outputs/apk/release/*.apk'
           token: ${{ secrets.GITHUB_TOKEN }}
           commit: master
-          tag: "latest"
+          tag: ${{ env.NOW }}
       
       
