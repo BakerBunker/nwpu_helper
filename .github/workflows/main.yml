@@ -38,7 +38,7 @@ jobs:
         run: flutter build apk --obfuscate --split-debug-info=debugInfo --target-platform android-arm,android-arm64,android-x64 --split-per-abi
       
       - name: set env
-        run: echo "::set-env name=NOW::v$(date +'%Y%m%d.%H%M%S')"
+        run: echo "NOW=v$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
         
       - name: create release
         uses: ncipollo/release-action@v1
