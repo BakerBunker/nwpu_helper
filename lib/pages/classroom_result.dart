@@ -33,7 +33,7 @@ class ClassroomResultPage extends StatefulWidget {
       required this.week,
       required this.date,
       required this.classRange,
-      this.keyword=''});
+      this.keyword = ''});
 
   @override
   _ClassroomResultPageState createState() => _ClassroomResultPageState();
@@ -51,7 +51,7 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
         queryParameters: {
           "semesterId": constant.semesterId,
           "room.campus.id": widget.campus,
-          "room.name":widget.keyword,
+          "room.name": widget.keyword,
           "room.building.id": widget.building,
           "room.type.id": widget.roomType,
           "iWeek": widget.week,
@@ -85,21 +85,23 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
     final tables = roomDocument.querySelectorAll('.gridtable');
     for (var table in tables) {
       final body = table.children[0];
-
       final name = body.children[0].text.trim().split(' ')[0];
+
+      bool isValid = true;
 
       for (int i = (widget.classRange.start + 1).toInt();
           i < (widget.classRange.end + 1).toInt();
           i++) {
-        if (body.children[i].children[widget.date].text.contains('排课') ||
-            body.children[i].children[widget.date].text.contains('占用')) {
+        final status = body.children[i].children[widget.date].text.trim();
+        if (status.contains('排课') || status.contains('占用')) {
+          isValid = false;
           break;
-        } else {
-          list.add(nameMap[name]!);
         }
       }
+
+      if (isValid) list.add(nameMap[name]!);
     }
-    return list.toList()..sort((a,b)=>a.name.compareTo(b.name));
+    return list.toList()..sort((a, b) => a.name.compareTo(b.name));
   }
 
   @override
