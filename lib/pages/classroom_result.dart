@@ -8,6 +8,7 @@ class Classroom {
   final String type;
   final String value;
   final String capacity;
+  List<bool> validList=List.filled(13, true);
 
   Classroom(this.name, this.value, this.type, this.capacity);
 
@@ -89,17 +90,27 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
 
       bool isValid = true;
 
-      for (int i = (widget.classRange.start + 1).toInt();
-          i < (widget.classRange.end + 1).toInt();
-          i++) {
+      var validList=List.filled(13,true);
+      for (int i =2;i<15;i++){
         final status = body.children[i].children[widget.date].text.trim();
         if (status.contains('排课') || status.contains('占用')) {
-          isValid = false;
+          validList[i-2]=false;
+        }
+      }
+
+      for (int i = (widget.classRange.start-1).toInt();
+          i < (widget.classRange.end-1).toInt();
+          i++) {
+        if(validList[i]==false){
+          isValid=false;
           break;
         }
       }
 
-      if (isValid) list.add(nameMap[name]!);
+      if (isValid) {
+        nameMap[name]!.validList=validList;
+        list.add(nameMap[name]!);
+      }
     }
     return list.toList()..sort((a, b) => a.name.compareTo(b.name));
   }
@@ -130,9 +141,15 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 final classroom = list[index];
-                return ListTile(
+                return ExpansionTile(
                   title: Text(classroom.name),
-                  trailing: Text(classroom.capacity),
+                  expandedAlignment: Alignment.centerLeft,
+                  childrenPadding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                  //trailing: Text(classroom.capacity),
+                  children: [
+                    Text("教室容量: "+classroom.capacity),
+                    AvilibleTimeWidget(avalibleList: classroom.validList,)
+                  ],
                 );
               },
               itemCount: list.length,
@@ -153,6 +170,29 @@ class _ClassroomResultPageState extends State<ClassroomResultPage> {
           return ListView(children: children);
         },
       ),
+    );
+  }
+}
+
+class AvilibleTimeWidget extends StatelessWidget{
+  final List<bool> avalibleList;
+  AvilibleTimeWidget({required this.avalibleList});
+
+  @override
+  Widget build(BuildContext context) {
+    final width=MediaQuery.of(context).size.width;
+    final height=16.0;
+    var widgetList=List<Widget>.empty(growable: true);
+    for (var i=0;i<13;i++){
+      if(avalibleList[i]){
+        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).accentColor,child: Text((i+1).toString()),alignment: Alignment.center,)));
+      }else{
+        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).errorColor,child: Text((i+1).toString()),alignment: Alignment.center,)));
+      }
+      widgetList.add(SizedBox(height: height,width: 2.0,child: Container(color: Colors.black12,),));
+    }
+    return Row(
+      children: widgetList,
     );
   }
 }
