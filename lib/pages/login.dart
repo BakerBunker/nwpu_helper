@@ -84,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: CheckboxListTile(
                   title: Text("记住密码"),
                   value: rememberPassword,
+                  activeColor: Theme.of(context).colorScheme.primary,
                   onChanged: (bool? value) {
                     setState(() {
                       rememberPassword = value ?? false;
@@ -119,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(21.11))),
                     backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).accentColor)),
+                        Theme.of(context).colorScheme.primary)),
               )
             ],
           ),

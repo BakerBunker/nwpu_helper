@@ -163,7 +163,7 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(21.11))),
                 backgroundColor:
-                    MaterialStateProperty.all(Theme.of(context).accentColor)),
+                    MaterialStateProperty.all(Theme.of(context).colorScheme.primary)),
           ),
         ),
         Container(

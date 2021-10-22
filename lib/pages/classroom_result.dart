@@ -185,9 +185,9 @@ class AvilibleTimeWidget extends StatelessWidget{
     var widgetList=List<Widget>.empty(growable: true);
     for (var i=0;i<13;i++){
       if(avalibleList[i]){
-        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).accentColor,child: Text((i+1).toString()),alignment: Alignment.center,)));
+        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).colorScheme.primary,child: Text((i+1).toString()),alignment: Alignment.center,)));
       }else{
-        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).errorColor,child: Text((i+1).toString()),alignment: Alignment.center,)));
+        widgetList.add(SizedBox(height: height,width: width/16, child: Container(color: Theme.of(context).colorScheme.error,child: Text((i+1).toString()),alignment: Alignment.center,)));
       }
       widgetList.add(SizedBox(height: height,width: 2.0,child: Container(color: Colors.black12,),));
     }
