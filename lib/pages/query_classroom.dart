@@ -17,7 +17,7 @@ class _QueryClassroomPageState extends State<QueryClassroomPage> {
 
   //states
   var menuValues = <String>['', '', '', '1', '1'];
-  var selectedClassRange = RangeValues(1, 13);
+  var selectedClassRange = RangeValues(1, 14);
   final keywordController = TextEditingController();
 
   Future<List<Map<String, String>>> getParams() async {
