@@ -6,7 +6,12 @@ import 'package:nwpu_helper/pages/query_classroom.dart';
 import 'package:nwpu_helper/utils/global.dart';
 
 void main() {
-  Map<String, dynamic> headers = {'Access-Control-Allow-Origin': '*'};
+  Map<String, dynamic> headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Host':'us.nwpu.edu.cn',
+    'Origin':'http://us.nwpu.edu.cn',
+    'Referer':'http://us.nwpu.edu.cn'
+  };
   dio.options.headers = headers;
   var cookieJar = CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));

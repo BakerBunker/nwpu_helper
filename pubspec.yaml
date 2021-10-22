@@ -35,7 +35,7 @@ dependencies:
   cookie_jar: ^3.0.0
 
   #tools
-  shared_preferences: ^2.0.5
+  shared_preferences: ^2.0.8
   html: ^0.15.0
 
 dev_dependencies:
